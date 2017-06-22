@@ -1868,6 +1868,38 @@ static int lua_getLumaVersion(lua_State *L)
 	return 3;
 }
 
+static Result _MCUHWC_GetBatteryLevel(u8 *out)
+{
+    #define TRY(expr) if(R_FAILED(res = (expr))) { svcCloseHandle(mcuhwcHandle); return res; }
+    Result res;
+    Handle mcuhwcHandle;
+    TRY(srvGetServiceHandle(&mcuhwcHandle, "mcu::HWC"));
+    u32 *cmdbuf = getThreadCommandBuffer();
+    cmdbuf[0] = 0x50000;
+    TRY(svcSendSyncRequest(mcuhwcHandle));
+    *out = (u8) cmdbuf[2];
+    svcCloseHandle(mcuhwcHandle);
+    return cmdbuf[1];
+    #undef TRY
+}
+
+static int lua_getBatteryPercentage(lua_State *L)
+{
+        int argc = lua_gettop(L);
+         
+	#ifndef SKIP_ERROR_HANDLING
+        if(argc != 0) return luaL_error(L, "wrong number of arguments.");
+        #endif
+
+	u8 out;
+
+	_MCUHWC_GetBatteryLevel(&out); 
+
+	lua_pushinteger(L, out);
+
+	return 1;
+}
+
 static int lua_detectsd(lua_State *L){
 	int argc = lua_gettop(L);
 	#ifndef SKIP_ERROR_HANDLING
@@ -1958,6 +1990,7 @@ static const luaL_Reg System_functions[] = {
 	{"getKernel",           lua_getK},
 	{"takeScreenshot",      lua_screenshot},
 	{"currentDirectory",    lua_curdir},
+	{"getBatteryPercentage",lua_getBatteryPercentage},
 	{"checkBuild",          lua_checkbuild},
 	{"renameDirectory",     lua_rendir},
 	{"createDirectory",     lua_createdir},
