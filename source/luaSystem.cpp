@@ -1849,6 +1849,25 @@ static int lua_getcpu(lua_State *L){
 	return 1;
 }
 
+static int lua_getLumaVersion(lua_State *L)
+{
+	int argc = lua_gettop(L);
+
+	#ifndef SKIP_ERROR_HANDLING
+	if (argc != 0) return luaL_error(L, "wrong number of arguments.");
+	#endif
+
+	s64 out;
+	svcGetSystemInfo(&out, 0x10000, 0);
+	u32 luma_id = (u32)out;
+
+	lua_pushinteger(L, GET_VERSION_MAJOR(luma_id));
+	lua_pushinteger(L, GET_VERSION_MINOR(luma_id));
+	lua_pushinteger(L, GET_VERSION_REVISION(luma_id));
+
+	return 3;
+}
+
 static int lua_detectsd(lua_State *L){
 	int argc = lua_gettop(L);
 	#ifndef SKIP_ERROR_HANDLING
@@ -1934,6 +1953,7 @@ static int lua_dup(lua_State *L){ // TODO: Add Music and wav struct support
 static const luaL_Reg System_functions[] = {
 	{"exit",                lua_exit},
 	{"getFirmware",         lua_getFW},
+	{"getLumaVersion",	lua_getLumaVersion},
 	{"getGWRomID",          lua_getcard},
 	{"getKernel",           lua_getK},
 	{"takeScreenshot",      lua_screenshot},
