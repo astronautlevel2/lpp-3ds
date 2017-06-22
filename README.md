@@ -2,6 +2,43 @@
 	<img src="http://rinnegatamante.it/lpplogo.png"/>
 </p>
 
+# Preamble
+
+This is a **fork** of the actual [lpp-3ds](https://github.com/Rinnegatamante/lpp-3ds).
+It expands it's functionality slightly to function within [3dfetch](https://github.com/yyualice/3dfetch).
+
+It is absolutely incompatible with the newest release of devkitARM and will not compile, same as the original source.
+
+I **highly** advise against attempts to build this yourself, as it is a rather painful and lengthy process due to it not being updated for the newest devkitARM,
+however, due to developer obligations I am going to attempt to provide a short reference guide for the building process.
+
+Prerequisites:
+
+- gcc
+- devkitARM r45 (yes, 45, not 46)
+- aemstro
+
+As my last 2 days of attempts to make lpp-3ds compile with devkitARM r46 were not particularly fruitfull and filled with sorrow
+and dread, here is a short guide:
+
+* Clone this repository: `git clone https://github.com/daedreth/lpp-3ds.git`
+* Clone aemstro: `git clone https://github.com/smealum/aemstro.git`
+* Set an environmental variable AEMSTRO to point to your cloned aemstro repository: `export AEMSTRO=/path/to/aemstro/repo`
+* Download the outdated devkitARM from: `https://sourceforge.net/projects/devkitpro/files/devkitARM/devkitARM_r45/`
+
+We proceed assuming that you already have an up to date devkitARM installation, if not, it doesn't matter.
+
+* Create a directory for the outdated devkitARM: `sudo mkdir -p /opt/devkitpro/devkitARM_old`
+* Assign permissions to be able to use it easily: `sudo chmod 777 /opt/devkitpro/devkitARM_old`
+* Copy the devkitARM r45 tarball to the newly created repository and unpack it: `tar -xvjf devkitARM_r45-x86_64-linux.tar.bz2`
+* Temporarily export environmental variables: `export DEVKITPRO=/opt/devkitpro && export DEVKITARM=/opt/devkitpro/devkitARM_old`
+* Enter the lpp-3ds directory and run `make` , this should be enough to compile the interpreter.
+* If an error regarding `CRT` is being shown, you have to recompile the library: `cd $DEVKITARM/arm-none-eabi/lib && make CRT=3dsx`
+
+The possibility that further errors arise is rather high, if you are foolish enough to subject yourself to this madness instead of downloading a precompiled binary
+and encounter some weird issues despite following these steps, open an issue.
+
+
 # Description
 
 **Lua Player Plus 3DS** is the first lua interpreter made for Nintendo 3DS.
