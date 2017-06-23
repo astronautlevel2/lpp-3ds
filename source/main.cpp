@@ -35,6 +35,7 @@
 #-----------------------------------------------------------------------------------------------------------------------*/
 
 #include <stdio.h>
+#include <dirent.h>
 #include <string.h>
 #include <3ds.h>
 #include "include/luaplayer.h"

@@ -30,7 +30,7 @@
 #- Jean-loup Gailly and Mark Adler for zlib ----------------------------------------------------------------------------#
 #- Special thanks to Aurelio for testing, bug-fixing and various help with codes and implementations -------------------#
 #-----------------------------------------------------------------------------------------------------------------------*/
-
+#include <dirent.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -1900,6 +1900,26 @@ static int lua_getBatteryPercentage(lua_State *L)
 	return 1;
 }
 
+static int lua_doesDirectoryExist(lua_State *L)
+{
+        int argc = lua_gettop(L);
+        #ifndef SKIP_ERROR_HANDLING
+        if(argc != 1) return luaL_error(L, "wrong number of arguments.");
+        #endif
+	
+	const char *path = luaL_checkstring(L, 1);
+	DIR* dir = opendir(path);
+
+	if (dir)
+	{
+	    lua_pushboolean(L, true);
+	    closedir(dir);
+	}else{
+	    lua_pushboolean(L, false);
+	}
+	return 1;
+}
+
 static int lua_detectsd(lua_State *L){
 	int argc = lua_gettop(L);
 	#ifndef SKIP_ERROR_HANDLING
@@ -2001,6 +2021,7 @@ static const luaL_Reg System_functions[] = {
 	{"listDirectory",       lua_listdir},
 	{"getBatteryLife",      lua_batterylv},
 	{"isBatteryCharging",   lua_batterycharge},
+	{"doesDirectoryExist",	lua_doesDirectoryExist},
 	{"getLanguage",         lua_getLang},
 	{"launch3DSX",          lua_launch},
 	{"launchCIA",           lua_launchCia},
