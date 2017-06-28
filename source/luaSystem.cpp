@@ -1927,11 +1927,14 @@ static int lua_sleep(lua_State *L)
         if(argc != 1) return luaL_error(L, "wrong number of arguments.");
         #endif
 	
-	const int seconds = luaL_checkinteger(L, 1);
-	s64 nano = (s64)seconds*100000000;
-
-	svcSleepThread(nano);
-
+	const int tenths_seconds = luaL_checkinteger(L, 1);
+	u64 timeToAdd = (u64)tenths_seconds * 100;
+	u64 startTime = osGetTime();
+	
+	while(osGetTime() < startTime + timeToAdd) {
+		//Do nothing
+	}
+	
 	return 0;
 }
 
