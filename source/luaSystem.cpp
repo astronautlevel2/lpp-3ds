@@ -1928,7 +1928,7 @@ static int lua_sleep(lua_State *L)
         #endif
 	
 	const int seconds = luaL_checkinteger(L, 1);
-	s64 nano = (s64)seconds*1000000000;
+	s64 nano = (s64)seconds*100000000;
 
 	svcSleepThread(nano);
 
