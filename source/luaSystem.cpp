@@ -1920,6 +1920,21 @@ static int lua_doesDirectoryExist(lua_State *L)
 	return 1;
 }
 
+static int lua_sleep(lua_State *L)
+{
+	int argc = lua_gettop(L);
+        #ifndef SKIP_ERROR_HANDLING
+        if(argc != 1) return luaL_error(L, "wrong number of arguments.");
+        #endif
+	
+	const int seconds = luaL_checkinteger(L, 1);
+	s64 nano = (s64)seconds*1000000000;
+
+	svcSleepThread(nano);
+
+	return 0;
+}
+
 static int lua_detectsd(lua_State *L){
 	int argc = lua_gettop(L);
 	#ifndef SKIP_ERROR_HANDLING
@@ -2051,6 +2066,7 @@ static const luaL_Reg System_functions[] = {
 	{"eraseNews",           lua_erasenews},
 	{"setCpuSpeed",         lua_setcpu},
 	{"getCpuSpeed",         lua_getcpu},
+	{"sleep",		lua_sleep},
 	{"extractFromZIP",      lua_getfilefromzip},
 	{"checkSDMC",           lua_detectsd},
 	{"fork",                lua_dup},
