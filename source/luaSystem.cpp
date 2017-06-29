@@ -2031,7 +2031,7 @@ static int lua_split(lua_State *L)
 	
 	char * token;
 	int num;
-	token = strtok (str,seperator);
+	token = strtok (input,seperator);
 	while (token != NULL)
 	{
 		lua_pushstring(L,token);
