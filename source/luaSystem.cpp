@@ -2027,15 +2027,15 @@ static int lua_split(lua_State *L)
 	#endif
 	
 	const char* input = luaL_checkstring(L,1);
-	const int seperator = luaL_checkinteger(L, 2);
+	const char* seperator = luaL_checkstring(L, 2);
 	
 	char * token;
 	int num;
-	token = strtok (str,"\n");
+	token = strtok (str,seperator);
 	while (token != NULL)
 	{
 		lua_pushstring(L,token);
-		token = strtok (NULL, "\n");
+		token = strtok (NULL,seperator);
 		num++;
 	}
 	return num;
