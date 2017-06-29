@@ -2030,7 +2030,7 @@ static int lua_split(lua_State *L)
 	const char* seperator = luaL_checkstring(L, 2);
 	
 	char * token;
-	int num;
+	int num = 0;
 	token = strtok (input,seperator);
 	while (token != NULL)
 	{
